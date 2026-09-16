@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AyeshaKODER | Computer Science & Mathematics Notes Hub</title>
+    <meta name="description" content="A searchable collection of watermarked, high-quality Computer Science and Mathematics notes compiled by AyeshaKODER.">
+    <meta name="keywords" content="Computer Science Notes, Mathematics III, Searchable Notes, AyeshaKODER, PDF Notes">
+    <meta name="author" content="AyeshaKODER">
+
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --border-color: #30363d;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent-glow: #58a6ff;
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            font-family: var(--font-family);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-area h1 { font-size: 1.8rem; font-weight: 700; }
+        .logo-area h1 span { color: var(--accent-glow); }
+        .tagline { color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem; }
+
+        /* Search Bar Architecture */
+        .search-container {
+            margin-bottom: 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--bg-primary);
+            padding: 0.5rem 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus { border-color: var(--accent-glow); }
+
+        /* Workspace Dashboard */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2.5rem;
+            min-height: 75vh;
+        }
+
+        @media (max-width: 968px) {
+            .workspace { grid-template-columns: 1fr; }
+        }
+
+        /* Accordion / Collapsible Panel Mechanics */
+        .notes-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: calc(100vh - 12rem);
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .subject-accordion {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 1rem 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #21262d;
+            user-select: none;
+        }
+
+        .accordion-header::after {
+            content: '▼';
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .subject-accordion.open .accordion-header::after {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 0.5rem 1rem 1rem 1rem;
+            border-top: 1px solid var(--border-color);
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .subject-accordion.open .accordion-content { display: flex; }
+
+        /* File Resource Rows inside Subjects */
+        .pdf-row {
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pdf-row:hover {
+            border-color: var(--accent-glow);
+            background-color: #1f242c;
+        }
+
+        .pdf-row.active {
+            border-left: 3px solid var(--accent-glow);
+            background-color: #1f242c;
+        }
+
+        .pdf-title { font-weight: 500; font-size: 0.95rem; color: #ffffff; }
+        .pdf-desc { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+        /* Right Column: Embedded Interactive Viewport */
+        .viewer-container {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: sticky;
+            top: 2rem;
+            height: calc(100vh - 8rem);
+        }
+
+        .viewer-header {
+            background-color: #21262d;
+            padding: 0.75rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .pdf-viewer { width: 100%; height: 100%; border: none; background: #525659; }
+
+        footer {
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <h1>Ayesha<span>KODER</span></h1>
+            <div class="tagline">University Resource Library & Study Guides</div>
+        </div>
+    </header>
+
+    <!-- Client-Side Search Engine Interface Layer -->
+    <div class="search-container">
+        <input type="text" id="searchBar" class="search-input" placeholder="🔍 Search subjects, chapters, or keywords (e.g., Mathematics)..." onkeyup="filterNotes()">
+    </div>
+
+    <main class="workspace">
+
+        <!-- Left Section: Interactive Searchable Accordion Tree -->
+        <section class="notes-sidebar" id="sidebarList">
+
+            <!-- SUBJECT 1: MATHEMATICS III (Example of Multiple PDFs) -->
+            <div class="subject-accordion open">
+                <div class="accordion-header" onclick="toggleAccordion(this)">Mathematics III</div>
+                <div class="accordion-content">
+
+                    <div class="pdf-row active" onclick="switchPDF('./pdfs/math3-ReferenceBook.pdf', 'Math III: G. V. Kumbhojkar', this)">
+                        <div>
+                            <div class="pdf-title">Module 1: Laplace Transforms</div>
+                            <div class="pdf-desc">Step-by-step calculus notes covering inverse transforms and differential equations.</div>
+                        </div>
+                    </div>
+
+                    <div class="pdf-row active" onclick="switchPDF('./pdfs/math3-laplace.pdf', 'Math III: Laplace Transforms', this)">
+                        <div>
+                            <div class="pdf-title">Module 1: Laplace Transforms</div>
+                            <div class="pdf-desc">Step-by-step calculus notes covering inverse transforms and differential equations.</div>
+                        </div>
+                    </div>
+
+                    <div class="pdf-row" onclick="switchPDF('./pdfs/math3-fourier.pdf', 'Math III: Fourier Series', this)">
+                        <div>
+                            <div class="pdf-title">Module 2: Fourier Series & Integrals</div>
+                            <div class="pdf-desc">Detailed expansions, periodic functions, and harmonic analysis.</div>
+                        </div>
+                    </div>
+
+                    <div class="pdf-row" onclick="switchPDF('./pdfs/math3-complex.pdf', 'Math III: Complex Variables', this)">
+                        <div>
+                            <div class="pdf-title">Module 3: Complex Analysis</div>
+                            <div class="pdf-desc">Analytic functions, Cauchy-Riemann equations, and residue theorems.</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SUBJECT 2: DATA STRUCTURES -->
+            <div class="subject-accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">Data Structures & Algorithms</div>
+                <div class="accordion-content">
+                    <div class="pdf-row" onclick="switchPDF('./pdfs/data-structures.pdf', 'DSA: Core Linear Structures', this)">
+                        <div>
+                            <div class="pdf-title">Linear Structures & Time Complexity</div>
+                            <div class="pdf-desc">Analysis of Arrays, Linked Lists, Stacks, Queues, and Big-O runtime bounds.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUBJECT 3: OPERATING SYSTEMS -->
+            <div class="subject-accordion">
+                <div class="accordion-header" onclick="toggleAccordion(this)">Operating Systems</div>
+                <div class="accordion-content">
+                    <div class="pdf-row" onclick="switchPDF('./pdfs/operating-systems.pdf', 'OS: Kernel Mechanics', this)">
+                        <div>
+                            <div class="pdf-title">Core Architecture & Process Scheduling</div>
+                            <div class="pdf-desc">Process states, CPU thread management, and deadlocks.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Section: Desktop Live Stream PDF Frame Viewport -->
+        <section class="viewer-container">
+            <div class="viewer-header">
+                Active Document: <span id="active-title" style="color: var(--accent-glow);">Math III: Laplace Transforms</span>
+            </div>
+            <iframe id="pdf-frame" class="pdf-viewer" src="./pdfs/math3-laplace.pdf" title="PDF preview"></iframe>
+        </section>
+
+    </main>
+
+    <footer>
+        © 2026 AyeshaKODER. Watermarked Academic Study Library.
+    </footer>
+
+    <script>
+        // UI Action: Toggle opening and closing of subject panels
+        function toggleAccordion(header) {
+            const accordion = header.parentElement;
+            accordion.classList.toggle('open');
+        }
+
+        // UI Action: Handle switching files in the dashboard viewport
+        function switchPDF(pdfUrl, title, element) {
+            document.getElementById('pdf-frame').src = pdfUrl;
+            document.getElementById('active-title').innerText = title;
+
+            // Clear prior row select indicators
+            document.querySelectorAll('.pdf-row').forEach(row => row.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Algorithmic Functional Logic: Real-Time Dynamic Input Search Filter
+        function filterNotes() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const accordions = document.querySelectorAll('.subject-accordion');
+
+            accordions.forEach(accordion => {
+                const subjectText = accordion.querySelector('.accordion-header').innerText.toLowerCase();
+                const pdfRows = accordion.querySelectorAll('.pdf-row');
+                let subjectHasMatch = subjectText.includes(query);
+                let visibleRowsCount = 0;
+
+                pdfRows.forEach(row => {
+                    const titleText = row.querySelector('.pdf-title').innerText.toLowerCase();
+                    const descText = row.querySelector('.pdf-desc').innerText.toLowerCase();
+
+                    if (titleText.includes(query) || descText.includes(query) || subjectText.includes(query)) {
+                        row.style.display = 'flex';
+                        visibleRowsCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                // Senior Dev UI Rule: If a child matches or the root header matches, keep root subject pane visible
+                if (subjectHasMatch || visibleRowsCount > 0) {
+                    accordion.style.display = 'block';
+                    // Auto-expand the accordion if the user is actively searching inside it
+                    if (query.length > 0) {
+                        accordion.classList.add('open');
+                    }
+                } else {
+                    accordion.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>
