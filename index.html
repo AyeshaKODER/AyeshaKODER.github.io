@@ -85,9 +85,28 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            max-height: calc(100vh - 12rem);
-            overflow-y: auto;
+            max-height: calc(100vh - 180px); 
+            overflow-y: auto;                
             padding-right: 0.5rem;
+        }
+
+                /* Style all internal scrollbars beautifully */
+        .notes-sidebar::-webkit-scrollbar,
+        .accordion-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .notes-sidebar::-webkit-scrollbar-track,
+        .accordion-content::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        .notes-sidebar::-webkit-scrollbar-thumb,
+        .accordion-content::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 10px;
+        }
+        .notes-sidebar::-webkit-scrollbar-thumb:hover,
+        .accordion-content::-webkit-scrollbar-thumb:hover {
+            background-color: var(--text-muted);
         }
 
         .subject-accordion {
@@ -125,6 +144,8 @@
             border-top: 1px solid var(--border-color);
             flex-direction: column;
             gap: 0.75rem;
+            max-height: 380px;  /* Caps the height of any single expanded subject */
+            overflow-y: auto;   /* Forces the scrollbar INSIDE the Mathematics card */
         }
 
         .subject-accordion.open .accordion-content { display: flex; }
@@ -186,16 +207,55 @@
             font-size: 0.85rem;
             color: var(--text-muted);
         }
+        .cheat-sheet-btn {
+            background-color: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.2s, color 0.2s;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .cheat-sheet-btn:hover {
+            background-color: var(--accent-glow);
+            color: #0d1117;
+            border-color: var(--accent-glow);
+        }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-area">
-            <h1>Ayesha<span>KODER</span></h1>
-            <div class="tagline">University Resource Library & Study Guides</div>
+<header style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+    <div class="logo-area">
+        <h1 style="font-size: 1.8rem; font-weight: 700;">Ayesha<span style="color: var(--accent-glow);">KODER</span></h1>
+        <div class="tagline" style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;">University Resource Library & Study Guides</div>
+    </div>
+    
+    <!-- Robust Engagement Widgets -->
+    <div class="repo-widgets" style="display: flex; align-items: center; gap: 1.2rem;">
+        
+        <!-- Native Text Counter Token -->
+        <span style="font-size: 0.85rem; color: var(--text-muted); background: var(--bg-secondary); padding: 0.4rem 0.8rem; border-radius: 6px; border: 1px solid var(--border-color); font-weight: 500; display: flex; align-items: center; gap: 6px;">
+            👁️ <span id="view-count" style="color: var(--accent-glow); font-weight: 700;">1</span> Website Views
+        </span>
+
+        <!-- Official Interactive GitHub Star Button -->
+        <div style="min-height: 28px; display: flex; align-items: center;">
+            <a class="github-button" 
+               href="https://github.com/AyeshaKODER/AyeshaKODER.github.io" 
+               data-icon="octicon-star" 
+               data-size="large" 
+               data-show-count="true" 
+               aria-label="Star AyeshaKODER/AyeshaKODER.github.io on GitHub">Star</a>
         </div>
-    </header>
+    </div>
+</header>
+
 
     <!-- Client-Side Search Engine Interface Layer -->
     <div class="search-container">
@@ -212,33 +272,41 @@
                 <div class="accordion-header" onclick="toggleAccordion(this)">Mathematics III</div>
                 <div class="accordion-content">
 
-                    <div class="pdf-row active" onclick="switchPDF('./pdfs/math3-ReferenceBook.pdf', 'Math III: G. V. Kumbhojkar', this)">
-                        <div>
-                            <div class="pdf-title">Module 1: Laplace Transforms</div>
-                            <div class="pdf-desc">Step-by-step calculus notes covering inverse transforms and differential equations.</div>
-                        </div>
-                    </div>
-
-                    <div class="pdf-row active" onclick="switchPDF('./pdfs/math3-laplace.pdf', 'Math III: Laplace Transforms', this)">
-                        <div>
-                            <div class="pdf-title">Module 1: Laplace Transforms</div>
-                            <div class="pdf-desc">Step-by-step calculus notes covering inverse transforms and differential equations.</div>
-                        </div>
-                    </div>
-
-                    <div class="pdf-row" onclick="switchPDF('./pdfs/math3-fourier.pdf', 'Math III: Fourier Series', this)">
-                        <div>
-                            <div class="pdf-title">Module 2: Fourier Series & Integrals</div>
-                            <div class="pdf-desc">Detailed expansions, periodic functions, and harmonic analysis.</div>
-                        </div>
-                    </div>
-
-                    <div class="pdf-row" onclick="switchPDF('./pdfs/math3-complex.pdf', 'Math III: Complex Variables', this)">
-                        <div>
-                            <div class="pdf-title">Module 3: Complex Analysis</div>
-                            <div class="pdf-desc">Analytic functions, Cauchy-Riemann equations, and residue theorems.</div>
-                        </div>
-                    </div>
+        <div class="pdf-row active" onclick="switchPDF('./pdfs/Math-III/Maths-3 SEM 3 G.V. Kumbhojkar.pdf ', 'Math III: G. V. Kumbhojkar', this)">
+        <div style="flex-grow: 1;">
+        <div class="pdf-title">Maths-3 SEM 3 G.V. Kumbhojkar</div>
+        <div class="pdf-desc">A Text Book of "Engineering Mathematics - III" for S. E . Semester - III (Computer Engineering and Information Technology Engineering) of "University of Mumbai" </div>
+        
+        <!-- Senior Dev Fix: Clean Flex container for the quick-action reference rows -->
+        <div class="formula-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem;"> 
+            
+            <button class="cheat-sheet-btn" onclick="event.stopPropagation(); switchPDF('./pdfs/Math-III/Formulas/( LAPLACE TRANSFORM ) M III FORMULAS.pdf', 'Quick Reference: Laplace Formulas', this)">
+                M1: Laplace
+            </button>
+            
+            <button class="cheat-sheet-btn" onclick="event.stopPropagation(); switchPDF('./pdfs/Math-III/Formulas/( INVERSE LAPLACE ) M III FORMULAS.pdf', 'Quick Reference: Inverse Laplace Formulas', this)">
+                M2: Inverse Laplace
+            </button>
+            
+            <button class="cheat-sheet-btn" onclick="event.stopPropagation(); switchPDF('./pdfs/Math-III/Formulas/( FOURIER SERIES ) M III FORMULAS.pdf', 'Quick Reference: Fourier Series Formulas', this)">
+                M3: Fourier Series
+            </button>
+            
+            <button class="cheat-sheet-btn" onclick="event.stopPropagation(); switchPDF('./pdfs/Math-III/Formulas/( COMPLEX VARIABLE ) M III FORMULAS.pdf', 'Quick Reference: Complex Variables Formulas', this)">
+                M4: Complex Variables
+            </button>
+            
+            <button class="cheat-sheet-btn" onclick="event.stopPropagation(); switchPDF('./pdfs/Math-III/Formulas/( STATISTICAL TECHNIQUE ) M III FORMULAS.pdf', 'Quick Reference: Statistical Techniques Formulas', this)">
+                M5: Statistical Techniques
+            </button>
+            
+            <button class="cheat-sheet-btn" onclick="event.stopPropagation(); switchPDF('./pdfs/Math-III/Formulas/( PROBABILITY ) M III FORMULAS.pdf', 'Quick Reference: Probability Formulas', this)">
+                M6: Probability
+            </button>
+            
+        </div>
+    </div>
+</div>
 
                 </div>
             </div>
@@ -278,11 +346,11 @@
             </div>
             <iframe id="pdf-frame" class="pdf-viewer" src="./pdfs/math3-laplace.pdf" title="PDF preview"></iframe>
         </section>
-
+        <!-- 3 - 30  -->
     </main>
 
     <footer>
-        © 2026 AyeshaKODER. Watermarked Academic Study Library.
+        © 2026 AyeshaKODER. Academic Study Library.
     </footer>
 
     <script>
@@ -338,6 +406,6 @@
             });
         }
     </script>
-
+    <script async defer src="https://github.io"></script>
 </body>
 </html>
